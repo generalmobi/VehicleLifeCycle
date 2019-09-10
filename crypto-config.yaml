@@ -11,7 +11,7 @@ OrdererOrgs:
   # Orderer
   # ---------------------------------------------------------------------------
   - Name: Orderer
-    Domain: tfbc.com
+    Domain: siam.com
     # ---------------------------------------------------------------------------
     # "Specs" - See PeerOrgs below for complete description
     # ---------------------------------------------------------------------------
@@ -22,10 +22,10 @@ OrdererOrgs:
 # ---------------------------------------------------------------------------
 PeerOrgs:
   # ---------------------------------------------------------------------------
-  # Buyer
+  # Manufacturer could be MG/Totoyta/Volkswagen/Suzuki
   # ---------------------------------------------------------------------------
-  - Name: Buyer
-    Domain: buyer.tfbc.com
+  - Name: manufacturer
+    Domain: manufacturer.siam.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -71,10 +71,10 @@ PeerOrgs:
     Users:
       Count: 1
   # ---------------------------------------------------------------------------
-  # Seller
+  # RTO for registration and tax collection
   # ---------------------------------------------------------------------------
-  - Name: Seller
-    Domain: seller.tfbc.com
+  - Name: rto
+    Domain: rto.siam.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------
@@ -121,10 +121,59 @@ PeerOrgs:
       Count: 1
 
   # ---------------------------------------------------------------------------
-  # Bank
+  # Owner , one who buy the car
   # ---------------------------------------------------------------------------
-  - Name: Bank
-    Domain: bank.tfbc.com
+  - Name: owner
+    Domain: owner.siam.com
+    # ---------------------------------------------------------------------------
+    # "Specs"
+    # ---------------------------------------------------------------------------
+    # Uncomment this section to enable the explicit definition of hosts in your
+    # configuration.  Most users will want to use Template, below
+    #
+    # Specs is an array of Spec entries.  Each Spec entry consists of two fields:
+    #   - Hostname:   (Required) The desired hostname, sans the domain.
+    #   - CommonName: (Optional) Specifies the template or explicit override for
+    #                 the CN.  By default, this is the template:
+    #
+    #                              "{{.Hostname}}.{{.Domain}}"
+    #
+    #                 which obtains its values from the Spec.Hostname and
+    #                 Org.Domain, respectively.
+    # ---------------------------------------------------------------------------
+    # Specs:
+    #   - Hostname: foo # implicitly "foo.bank.tfbc.com"
+    #     CommonName: foo27.org5.tfbc.com # overrides Hostname-based FQDN set above
+    #   - Hostname: bar
+    #   - Hostname: baz
+    # ---------------------------------------------------------------------------
+    # "Template"
+    # ---------------------------------------------------------------------------
+    # Allows for the definition of 1 or more hosts that are created sequentially
+    # from a template. By default, this looks like "peer%d" from 0 to Count-1.
+    # You may override the number of nodes (Count), the starting index (Start)
+    # or the template used to construct the name (Hostname).
+    #
+    # Note: Template and Specs are not mutually exclusive.  You may define both
+    # sections and the aggregate nodes will be created for you.  Take care with
+    # name collisions
+    # ---------------------------------------------------------------------------
+    Template:
+      Count: 1
+      # Start: 5
+      # Hostname: {{.Prefix}}{{.Index}} # default
+    # ---------------------------------------------------------------------------
+    # "Users"
+    # ---------------------------------------------------------------------------
+    # Count: The number of user accounts _in addition_ to Admin
+    # ---------------------------------------------------------------------------
+    Users:
+      Count: 1
+# ---------------------------------------------------------------------------
+  # scrp , one who manages scrapping of old vehcle
+  # ---------------------------------------------------------------------------
+  - Name: scrp
+    Domain: scrp.siam.com
     # ---------------------------------------------------------------------------
     # "Specs"
     # ---------------------------------------------------------------------------

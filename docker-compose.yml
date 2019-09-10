@@ -9,56 +9,72 @@ networks:
   basic:
 
 services:
-  ca.bank.tfbc.com:
+  ca.manufacturer.siam.com:
     image: hyperledger/fabric-ca
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.bank.tfbc.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.bank.tfbc.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/900763b90285ad754c3c354c69d2409d30f5fe3b2351a2dfa9a6a5d20c26ab1e_sk
+      - FABRIC_CA_SERVER_CA_NAME=ca.manufacturer.siam.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.manufacturer.siam.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/ae64b1b067fabe3c182a2c4f5c46cf25cbcb4fe7a574761db16aa664c57687ec_sk
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/bank.tfbc.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca.bank.tfbc.com
+      - ./crypto-config/peerOrganizations/manufacturer.siam.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca.manufacturer.siam.com
     networks:
       - basic
 
-  ca.buyer.tfbc.com:
+  ca.rto.siam.com:
     image: hyperledger/fabric-ca
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.buyer.tfbc.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.buyer.tfbc.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/cc04322e3614ea2bdc9d1bfbb48f0a30abf7773bc8aa152c7958387e39d562a3_sk
+      - FABRIC_CA_SERVER_CA_NAME=ca.rto.siam.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.rto.siam.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/6a6aebdb6c60d363fd55694305dd0e99b7cb7ee6d5ade332577a4f99016787cb_sk
     ports:
       - "8054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/buyer.tfbc.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca.buyer.tfbc.com
+      - ./crypto-config/peerOrganizations/rto.siam.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca.rto.siam.com
     networks:
       - basic
 
-  ca.seller.tfbc.com:
+  ca.owner.siam.com:
     image: hyperledger/fabric-ca
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca.seller.tfbc.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.seller.tfbc.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/7b929b88da8558df34501173010d8571b07b29be6207c5d7c48ae0bea43b780a_sk
+      - FABRIC_CA_SERVER_CA_NAME=ca.owner.siam.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.owner.siam.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d846671736c1796e8fe08eeff59cd29a972074cba47582c9c3a37b48c6aa5eea_sk
     ports:
       - "9054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./crypto-config/peerOrganizations/seller.tfbc.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca.seller.tfbc.com
+      - ./crypto-config/peerOrganizations/owner.siam.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca.owner.siam.com
     networks:
       - basic
 
-  orderer.tfbc.com:
-    container_name: orderer.tfbc.com
+  ca.scrp.siam.com:
+    image: hyperledger/fabric-ca
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca.scrp.siam.com
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.scrp.siam.com-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/b1c4e849205bb5779b13ef690883ae895d3d1ff7ae9991f421a94fbff18fca8c_sk
+    ports:
+      - "10054:7054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./crypto-config/peerOrganizations/scrp.siam.com/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca.scrp.siam.com
+    networks:
+      - basic
+
+  orderer.siam.com:
+    container_name: orderer.siam.com
     image: hyperledger/fabric-orderer
     environment:
       - ORDERER_GENERAL_LOGLEVEL=debug
@@ -73,24 +89,25 @@ services:
       - 7050:7050
     volumes:
       - ./config/:/etc/hyperledger/configtx
-      - ./crypto-config/ordererOrganizations/tfbc.com/orderers/orderer.tfbc.com/:/etc/hyperledger/msp/orderer
-      - ./crypto-config/peerOrganizations/buyer.tfbc.com/peers/peer0.buyer.tfbc.com/:/etc/hyperledger/msp/peerBuyer
-      - ./crypto-config/peerOrganizations/seller.tfbc.com/peers/peer0.seller.tfbc.com/:/etc/hyperledger/msp/peerSeller
-      - ./crypto-config/peerOrganizations/bank.tfbc.com/peers/peer0.bank.tfbc.com/:/etc/hyperledger/msp/peerBank
+      - ./crypto-config/ordererOrganizations/siam.com/orderers/orderer.siam.com/:/etc/hyperledger/msp/orderer
+      - ./crypto-config/peerOrganizations/owner.siam.com/peers/peer0.owner.siam.com/:/etc/hyperledger/msp/peerowner
+      - ./crypto-config/peerOrganizations/rto.siam.com/peers/peer0.rto.siam.com/:/etc/hyperledger/msp/peerrto
+      - ./crypto-config/peerOrganizations/scrp.siam.com/peers/peer0.scrp.siam.com/:/etc/hyperledger/msp/peerscrp
+      - ./crypto-config/peerOrganizations/manufacturer.siam.com/peers/peer0.manufacturer.siam.com/:/etc/hyperledger/msp/peermanufacturer
     networks:
       - basic
 
-  peer0.bank.tfbc.com:
-    container_name: peer0.bank.tfbc.com
+  peer0.manufacturer.siam.com:
+    container_name: peer0.manufacturer.siam.com
     image: hyperledger/fabric-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.bank.tfbc.com
+      - CORE_PEER_ID=peer0.manufacturer.siam.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=BankMSP
+      - CORE_PEER_LOCALMSPID=manufacturerMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.bank.tfbc.com:7051
+      - CORE_PEER_ADDRESS=peer0.manufacturer.siam.com:7051
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
@@ -110,11 +127,11 @@ services:
       - 7053:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/bank.tfbc.com/peers/peer0.bank.tfbc.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/bank.tfbc.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/manufacturer.siam.com/peers/peer0.manufacturer.siam.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/manufacturer.siam.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
-      - orderer.tfbc.com
+      - orderer.siam.com
       - couchdb0
     networks:
       - basic
@@ -132,17 +149,17 @@ services:
     networks:
       - basic
 
-  peer0.buyer.tfbc.com:
-    container_name: peer0.buyer.tfbc.com
+  peer0.rto.siam.com:
+    container_name: peer0.rto.siam.com
     image: hyperledger/fabric-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.buyer.tfbc.com
+      - CORE_PEER_ID=peer0.rto.siam.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=BuyerMSP
+      - CORE_PEER_LOCALMSPID=rtoMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.buyer.tfbc.com:7051
+      - CORE_PEER_ADDRESS=peer0.rto.siam.com:7051
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
@@ -162,11 +179,11 @@ services:
       - 8053:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/buyer.tfbc.com/peers/peer0.buyer.tfbc.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/buyer.tfbc.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/rto.siam.com/peers/peer0.rto.siam.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/rto.siam.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
-      - orderer.tfbc.com
+      - orderer.siam.com
       - couchdb1
     networks:
       - basic
@@ -184,17 +201,17 @@ services:
     networks:
       - basic
 
-  peer0.seller.tfbc.com:
-    container_name: peer0.seller.tfbc.com
+  peer0.owner.siam.com:
+    container_name: peer0.owner.siam.com
     image: hyperledger/fabric-peer
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      - CORE_PEER_ID=peer0.seller.tfbc.com
+      - CORE_PEER_ID=peer0.owner.siam.com
       - CORE_LOGGING_PEER=debug
       - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
-      - CORE_PEER_LOCALMSPID=SellerMSP
+      - CORE_PEER_LOCALMSPID=ownerMSP
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
-      - CORE_PEER_ADDRESS=peer0.seller.tfbc.com:7051
+      - CORE_PEER_ADDRESS=peer0.owner.siam.com:7051
       # # the following setting starts chaincode containers on the same
       # # bridge network as the peers
       # # https://docs.docker.com/compose/networking/
@@ -214,11 +231,11 @@ services:
       - 9053:7053
     volumes:
         - /var/run/:/host/var/run/
-        - ./crypto-config/peerOrganizations/seller.tfbc.com/peers/peer0.seller.tfbc.com/msp:/etc/hyperledger/msp/peer
-        - ./crypto-config/peerOrganizations/seller.tfbc.com/users:/etc/hyperledger/msp/users
+        - ./crypto-config/peerOrganizations/owner.siam.com/peers/peer0.owner.siam.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/owner.siam.com/users:/etc/hyperledger/msp/users
         - ./config:/etc/hyperledger/configtx
     depends_on:
-      - orderer.tfbc.com
+      - orderer.siam.com
       - couchdb2
     networks:
       - basic
@@ -236,6 +253,57 @@ services:
     networks:
       - basic
 
+  peer0.scrp.siam.com:
+    container_name: peer0.scrp.siam.com
+    image: hyperledger/fabric-peer
+    environment:
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - CORE_PEER_ID=peer0.scrp.siam.com
+      - CORE_LOGGING_PEER=debug
+      - CORE_CHAINCODE_LOGGING_LEVEL=DEBUG
+      - CORE_PEER_LOCALMSPID=scrpMSP
+      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp/peer/
+      - CORE_PEER_ADDRESS=peer0.scrp.siam.com:7051
+      # # the following setting starts chaincode containers on the same
+      # # bridge network as the peers
+      # # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_basic
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb2:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: peer node start
+    # command: peer node start --peer-chaincodedev=true
+    ports:
+      - 10051:7051
+      - 10053:7053
+    volumes:
+        - /var/run/:/host/var/run/
+        - ./crypto-config/peerOrganizations/scrp.siam.com/peers/peer0.scrp.siam.com/msp:/etc/hyperledger/msp/peer
+        - ./crypto-config/peerOrganizations/scrp.siam.com/users:/etc/hyperledger/msp/users
+        - ./config:/etc/hyperledger/configtx
+    depends_on:
+      - orderer.siam.com
+      - couchdb3
+    networks:
+      - basic
+
+  couchdb3:
+    container_name: couchdb3
+    image: hyperledger/fabric-couchdb
+    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+    environment:
+      - COUCHDB_USER=
+      - COUCHDB_PASSWORD=
+    ports:
+      - 8984:5984
+    networks:
+      - basic
 
   cli:
     container_name: cli
@@ -246,9 +314,9 @@ services:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_LOGGING_LEVEL=DEBUG
       - CORE_PEER_ID=cli
-      - CORE_PEER_ADDRESS=peer0.buyer.tfbc.com:7051
-      - CORE_PEER_LOCALMSPID=BuyerMSP
-      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/buyer.tfbc.com/users/Admin@buyer.tfbc.com/msp
+      - CORE_PEER_ADDRESS=peer0.rto.siam.com:7051
+      - CORE_PEER_LOCALMSPID=rtoMSP
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/rto.siam.com/users/Admin@rto.siam.com/msp
       - CORE_CHAINCODE_KEEPALIVE=10
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: /bin/bash
@@ -260,10 +328,12 @@ services:
     networks:
         - basic
     depends_on:
-      - orderer.tfbc.com
-      - peer0.bank.tfbc.com
+      - orderer.siam.com
+      - peer0.manufacturer.siam.com
       - couchdb0
-      - peer0.buyer.tfbc.com
+      - peer0.rto.siam.com
       - couchdb1
-      - peer0.seller.tfbc.com
+      - peer0.owner.siam.com
       - couchdb2
+      - peer0.scrp.siam.com
+      - couchdb3

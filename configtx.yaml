@@ -14,26 +14,28 @@
 ################################################################################
 Profiles:
 
-    TFBCOrgOrdererGenesis:
+    SIAMOrgOrdererGenesis:
         Orderer:
             <<: *OrdererDefaults
             Organizations:
                 - *OrdererOrg
         Consortiums:
-            SampleConsortium:
+            SiamIndia:
                 Organizations:
-                    - *Buyer
-                    - *Seller
-                    - *Bank
+                    - *manufacturer
+                    - *rto
+                    - *owner
+                    - *scrp
 
-    TFBCOrgChannel:
-        Consortium: SampleConsortium
+    SIAMOrgChannel:
+        Consortium: SiamIndia
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *Buyer
-                - *Seller
-                - *Bank
+                - *manufacturer
+                - *rto
+                - *owner
+                - *scrp
 
 ################################################################################
 #
@@ -56,57 +58,72 @@ Organizations:
         ID: OrdererMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration
-        MSPDir: crypto-config/ordererOrganizations/tfbc.com/msp
+        MSPDir: crypto-config/ordererOrganizations/siam.com/msp
 
-    - &Buyer
+    - &manufacturer
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: BuyerMSP
+        Name: manufacturer
 
         # ID to load the MSP definition as
-        ID: BuyerMSP
+        ID: manufacturerMSP
 
-        MSPDir: crypto-config/peerOrganizations/buyer.tfbc.com/msp
+        MSPDir: crypto-config/peerOrganizations/manufacturer.siam.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.buyer.tfbc.com
+            - Host: peer0.manufacturer.siam.com
               Port: 7051
-    - &Seller
+    - &rto
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: SellerMSP
+        Name: rtoMSP
 
         # ID to load the MSP definition as
-        ID: SellerMSP
+        ID: rtoMSP
 
-        MSPDir: crypto-config/peerOrganizations/seller.tfbc.com/msp
+        MSPDir: crypto-config/peerOrganizations/rto.siam.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.seller.tfbc.com
+            - Host: peer0.rto.siam.com
               Port: 7051
-    - &Bank
+    - &owner
         # DefaultOrg defines the organization which is used in the sampleconfig
         # of the fabric.git development environment
-        Name: BankMSP
+        Name: ownerMSP
 
         # ID to load the MSP definition as
-        ID: BankMSP
+        ID: ownerMSP
 
-        MSPDir: crypto-config/peerOrganizations/bank.tfbc.com/msp
+        MSPDir: crypto-config/peerOrganizations/owner.siam.com/msp
 
         AnchorPeers:
             # AnchorPeers defines the location of peers which can be used
             # for cross org gossip communication.  Note, this value is only
             # encoded in the genesis block in the Application section context
-            - Host: peer0.bank.tfbc.com
+            - Host: peer0.owner.siam.com
               Port: 7051
+    - &scrp
+        # DefaultOrg defines the organization which is used in the sampleconfig
+        # of the fabric.git development environment
+        Name: scrpMSP
 
+        # ID to load the MSP definition as
+        ID: scrpMSP
+
+        MSPDir: crypto-config/peerOrganizations/scrp.siam.com/msp
+
+        AnchorPeers:
+            # AnchorPeers defines the location of peers which can be used
+            # for cross org gossip communication.  Note, this value is only
+            # encoded in the genesis block in the Application section context
+            - Host: peer0.scrp.siam.com
+              Port: 7051
 ################################################################################
 #
 #   SECTION: Orderer
@@ -122,7 +139,7 @@ Orderer: &OrdererDefaults
     OrdererType: solo
 
     Addresses:
-        - orderer.tfbc.com:7050
+        - orderer.siam.com:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
